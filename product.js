@@ -17,6 +17,10 @@ function logout(){
 }
 
   const { createApp } = Vue
+
+  import pagination from './Pagination.js'
+  import productModal from './ProductModal.js'
+  import delProductModal from './delProductModal.js'
   
   const app = createApp({
     data() {
@@ -29,6 +33,9 @@ function logout(){
 
       }
     },
+    components:{
+      pagination,productModal,delProductModal
+    },
         methods: {
           deleteProduct(){
             axios
@@ -39,7 +46,8 @@ function logout(){
                 // window.location = './product.html';
                 // this.products = res.data.products;
                 this.getProducts();
-                this.delProductModal.hide();
+                // this.delProductModal.hide();
+                this.$refs.dModal.closeModal();
               }).catch((error) => {
                 console.dir(error);
                 alert(error.response);
@@ -81,7 +89,8 @@ function logout(){
                 console.log(res);
                 // this.products = res.data.products;
                 this.getProducts();
-                this.productModal.hide();
+                // this.productModal.hide();
+                this.$refs.pModal.closeModal();
                 // alert('修改成功');
                 // window.location = './product.html';
               }).catch((error) => {
@@ -93,7 +102,8 @@ function logout(){
               .then((res) => {
                 console.log(res);
                 this.getProducts();
-                this.productModal.hide();
+                // this.productModal.hide();
+                this.$refs.pModal.closeModal();
                 // this.products = res.data.products;
                 // alert('新增成功');
                 // window.location = './product.html';
@@ -108,21 +118,25 @@ function logout(){
                 imagesUrl : [],
                 isNew : true
               }
-              this.productModal.show();
+              // this.productModal.show();
+              this.$refs.pModal.openModal();
             }else if(status == 'edit'){
               this.temp = {...product}
-            if(!Array.isArray(this.temp.imagesUrl)){
-              this.temp.imagesUrl = [];
-            }
-              this.productModal.show();
+              if(!Array.isArray(this.temp.imagesUrl)){
+                this.temp.imagesUrl = [];
+              }
+              // this.productModal.show();
+              this.$refs.pModal.openModal();
             }else if(status == 'delete'){
               this.temp = {...product}
-              this.delProductModal.show();
+              // this.delProductModal.show();
+              this.$refs.dModal.openModal();
             }
           }
           
         },
 		mounted(){
+      // console.log(this.$refs);
       axios
       .post(`${baseURL}/v2/api/user/check`, {})
       .then((res) => {
@@ -134,9 +148,9 @@ function logout(){
         window.location = "./index.html"
       })
       //build modal
-      console.log(this.$refs);
-      this.productModal = new bootstrap.Modal(this.$refs.productModal);
-      this.delProductModal = new bootstrap.Modal(this.$refs.delProductModal);
+      // console.log(this.$refs);
+      // this.productModal = new bootstrap.Modal(this.$refs.productModal);
+      // this.delProductModal = new bootstrap.Modal(this.$refs.delProductModal);
 
     }
   });
