@@ -67,22 +67,7 @@ function logout(){
           },
           updateProduct(){
             if(this.temp.isNew){
-              // this.temp = {
-              //   category: "甜甜圈",
-              //   content: "尺寸：14x14cm",
-              //   description: "濃郁的草莓風味，中心填入滑順不膩口的卡士達內餡，帶來滿滿幸福感！",
-              //   is_enabled: 1,
-              //   origin_price: 150,
-              //   price: 99,
-              //   title: "草莓莓果夾心圈",
-              //   unit: "個",
-              //   num: 10,
-              //   imageUrl: "https://images.unsplash.com/photo-1583182332473-b31ba08929c8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NzR8fGRvbnV0fGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60",
-              //   imagesUrl: [
-              //     "https://images.unsplash.com/photo-1626094309830-abbb0c99da4a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2832&q=80",
-              //     "https://images.unsplash.com/photo-1559656914-a30970c1affd?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTY0fHxkb251dHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60"
-              //   ]
-              // }
+
               axios
               .post(`${baseURL}/v2/api/gobobofu/admin/product`, {'data':this.temp})
               .then((res) => {
@@ -112,12 +97,57 @@ function logout(){
               })
             }
           },
+          uploadPhoto(){
+            console.log('uploadPhoto');
+            const formData = new FormData();
+            formData.append('file-to-upload', document.getElementById('fileInput').files[0]);
+            console.log(formData);
+            axios
+              .post(`${baseURL}/v2/api/gobobofu/admin/upload`, formData,{
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }})
+              .then((res) => {
+                console.log(res.data.imageUrl);
+                if(this.temp.imagesUrl[this.temp.imagesUrl.length-1]==''){
+                  this.temp.imagesUrl[this.temp.imagesUrl.length-1]=res.data.imageUrl
+                }else{
+                  this.temp.imagesUrl.push(res.data.imageUrl)
+                }
+                // this.products = res.data.products;
+                // this.getProducts();
+                // this.productModal.hide();
+                // this.$refs.pModal.closeModal();
+                // alert('修改成功');
+                // window.location = './product.html';
+              }).catch((error) => {
+                console.dir(error);
+              })
+          },
           openModal(status,product){
             if(status == 'new'){
               this.temp = {
                 imagesUrl : [],
                 isNew : true
               }
+              this.temp = {
+                isNew : true,
+                category: "甜甜圈",
+                content: "尺寸：14x14cm",
+                description: "濃郁的草莓風味，中心填入滑順不膩口的卡士達內餡，帶來滿滿幸福感！",
+                is_enabled: 1,
+                origin_price: 150,
+                price: 99,
+                title: "草莓莓果夾心圈",
+                unit: "個",
+                num: 10,
+                imageUrl: "https://images.unsplash.com/photo-1583182332473-b31ba08929c8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NzR8fGRvbnV0fGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60",
+                imagesUrl: [
+                  "https://images.unsplash.com/photo-1626094309830-abbb0c99da4a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2832&q=80",
+                  "https://images.unsplash.com/photo-1559656914-a30970c1affd?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTY0fHxkb251dHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60"
+                ]
+              }
+
               // this.productModal.show();
               this.$refs.pModal.openModal();
             }else if(status == 'edit'){

@@ -1,5 +1,5 @@
 export default{
-  props:['temp','updateProduct'],
+  props:['temp','updateProduct','uploadPhoto'],
   data(){
     return{
       productModal:null,
@@ -66,6 +66,10 @@ export default{
                   刪除圖片
                 </button>
               </div>
+              <form action="/api/gobobofu/admin/upload" enctype="multipart/form-data"  method="post" id="uploadForm">
+                <input type="file" name="file-to-upload" id="fileInput" class="form-control">
+                <input type="button" value="Upload" @click="uploadPhoto" class="btn btn-primary">
+              </form> 
             </div>
             <div class="col-sm-8">
               <!-- <pre>{{temp}}</pre> -->
@@ -151,6 +155,18 @@ export default{
                   v-model="temp.content"
                 >
                 </textarea>
+              </div>
+              <div class="mb-3">
+                  <label for="rating" class="form-label">星等評分</label>
+                  <input
+                    id="rating"
+                    type="number"
+                    min="1"
+                    max="10"
+                    class="form-control"
+                    placeholder="評分1-10"
+                    v-model="temp.rating"
+                  />
               </div>
               <div class="mb-3">
                 <div class="form-check">
